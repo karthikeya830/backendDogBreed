@@ -7,11 +7,12 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import os
 import PIL
-# from flask_cors import CORS 
+from flask_cors import CORS 
 
 
 app = Flask(__name__)
-# CORS(app, resources={r"/submit": {"origins": "*"}})
+CORS(app, resources={r"/submit": {"origins": "*"}})
+
 # Load the model and dictionary once when the application starts
 model = tf.keras.models.load_model(
        ('full-image-set-mobilenetv2-Adam.h5'),
@@ -70,11 +71,11 @@ def get_output():
         prediction = predict_label(img_path)
 
         response_data = {'predictions': prediction}
-
+        os.remove(img_path)
         return jsonify(response_data)
 
         # return render_template("index.html", prediction=prediction, img_filename=img.filename)
 
 
 if __name__ == '__main__':
-    app.run(debug=False,host='0.0.0.0')
+    app.run(debug=True,host='0.0.0.0')
